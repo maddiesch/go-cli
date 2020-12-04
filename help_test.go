@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/maddiesch/cli"
+	"github.com/maddiesch/go-cli"
 )
 
 func TestHelp(t *testing.T) {
