@@ -16,7 +16,7 @@ func TestCommandChildren(t *testing.T) {
 	app := cli.NewCommand(cli.CommandConfig{
 		Use: "app",
 		Children: cli.Children{
-			"say": cli.NewCommand(cli.CommandConfig{
+			cli.NewCommand(cli.CommandConfig{
 				Use:   "say",
 				Short: "prints the given input to the standard output",
 				Run: cli.CommandFunc(func(ctx context.Context, _ cli.Arguments) error {

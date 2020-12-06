@@ -15,7 +15,7 @@ func TestHelp(t *testing.T) {
 		Short: "the root cli app",
 		Long:  "cli provides a simple interface for creating robust, well-documented, and fast CLI applications.",
 		Children: cli.Children{
-			"foo": cli.NewCommand(cli.CommandConfig{
+			cli.NewCommand(cli.CommandConfig{
 				Use:   "foo",
 				Short: "called when you need to foo",
 				Run: cli.CommandFunc(func(context.Context, cli.Arguments) error {

@@ -11,11 +11,13 @@ type Arguments []string
 
 // Command provides the interface for executing commands
 type Command interface {
+	Name() string
+
 	Execute(context.Context, Arguments) error
 }
 
 // Children provides the type for child commands
-type Children map[string]Command
+type Children []Command
 
 // CommandConfig provides the required values for creating a new Command
 type CommandConfig struct {
@@ -62,6 +64,11 @@ type ContainerCommand struct {
 	Arguments []PositionalArgument
 	Run       Command
 	Children  Children
+}
+
+// Name provides the needed implementation for the Command interface
+func (c *ContainerCommand) Name() string {
+	return c.Use
 }
 
 // Execute provides the needed implementation for the Command interface
@@ -114,8 +121,10 @@ func (c *ContainerCommand) child(ctx context.Context, args Arguments) error {
 	name := args[0]
 	args = args[1:]
 
-	if child, ok := c.Children[name]; ok {
-		return child.Execute(ctx, args)
+	for _, child := range c.Children {
+		if child.Name() == name {
+			return child.Execute(ctx, args)
+		}
 	}
 
 	return errors.New("invalid sub-command name")
@@ -130,6 +139,10 @@ func CommandFunc(fn func(context.Context, Arguments) error) Command {
 
 type commandFunc struct {
 	handler func(context.Context, Arguments) error
+}
+
+func (c *commandFunc) Name() string {
+	return "<unnamed>"
 }
 
 func (c *commandFunc) Execute(ctx context.Context, args Arguments) error {

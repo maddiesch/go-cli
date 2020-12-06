@@ -68,13 +68,8 @@ func (c *ContainerCommand) w0(ctx context.Context, buf *strings.Builder) {
 		buf.WriteString(au.Underline(au.Bold(au.Magenta("commands"))).String())
 		buf.WriteRune('\n')
 
-		for name, child := range c.Children {
+		for _, child := range c.Children {
 			if helper, ok := child.(Helper); ok {
-				if container, ok := child.(*ContainerCommand); ok {
-					if container.Use == "" {
-						container.Use = name
-					}
-				}
 				helper.Help(ctx, 1, buf)
 				buf.WriteRune('\n')
 			}
@@ -157,6 +152,10 @@ func SelfHelp() Command {
 }
 
 type helpCommand struct {
+}
+
+func (h *helpCommand) Name() string {
+	return "help"
 }
 
 func (h *helpCommand) Execute(ctx context.Context, args Arguments) error {
