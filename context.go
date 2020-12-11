@@ -11,9 +11,6 @@ var (
 	parentCommandValueContextKey = struct{ string }{"parent"}
 )
 
-// FlagValues provides helpful accessors
-type FlagValues map[string]interface{}
-
 // ArgumentValues provides helpful accessors
 type ArgumentValues map[string]string
 

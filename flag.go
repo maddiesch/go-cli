@@ -9,6 +9,19 @@ import (
 // Flags is a collection of flags
 type Flags map[string]Flag
 
+// CopyAndMerge merges the flags into a single group of flags and returns the
+// new group
+func (f Flags) CopyAndMerge(other Flags) Flags {
+	copy := make(Flags)
+	for k, v := range f {
+		copy[k] = v
+	}
+	for k, v := range other {
+		copy[k] = v
+	}
+	return copy
+}
+
 // Flag contains the information for
 type Flag interface {
 	Short() string                           // Return help text describing the flag
@@ -142,4 +155,28 @@ func (f Flags) parse(name string, args Arguments) (*parseOutput, error) {
 	}
 
 	return out, nil
+}
+
+// FlagValues provides helpful accessors
+type FlagValues map[string]interface{}
+
+// StringValue returns the string value for the specified key
+func (v FlagValues) StringValue(name string) string {
+	if raw, ok := v[name]; ok {
+		if str, ok := raw.(string); ok {
+			return str
+		}
+		return fmt.Sprintf("%v", raw)
+	}
+	return ""
+}
+
+// IntValue returns the int value for the specified key
+func (v FlagValues) IntValue(name string) int64 {
+	if raw, ok := v[name]; ok {
+		if i, ok := raw.(int64); ok {
+			return i
+		}
+	}
+	return 0
 }
